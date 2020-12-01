@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#Gnuplot mi ale zial ani po nainstalovani nefungoval aj ked by to malo byt spravne 
+cat <<THE_END
+set terminal wxt
+set xdata time
+set timefmt "%H-%M"
+set xtics format "%H:%M"
+plot '-' using 1:2 with boxes
+THE_END
+LINE="$1"
+while read LINE
+do
+	PRETIME=$(echo "$LINE" | cut -f 3 -d , | cut -f 2 -d T )
+	TIME=$(echo "$PRETIME" | cut -f 1,2 -d : | sed 's/:/-/g' )
+	TEMP=$(echo "$LINE" | cut -f 6 -d , )
+	echo "$TIME" " " "$TEMP"
+	
+done
+cat <<THE_END
+e
+THE_END
+
