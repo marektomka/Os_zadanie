@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ "$#" == 1 ]
+then
+	CITY="$1"
+	DAT=$( date -d yesterday +"%d-%m-%Y" )
+	D=$( echo $DAT | cut -f 1 -d "-" )
+	M=$( echo $DAT | cut -f 2 -d "-" )
+	Y=$( echo $DAT | cut -f 3 -d "-" )
+	STARTT=$( date -d $M'/'$D'/'$Y +'%s' )
+	ENDT=$( echo $STARTT + 24*60*60 | bc )
+	URL=$( echo "https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString="$CITY"&startTime="$STARTT"&endTime="$ENDT )
+	        curl -s $URL | grep $CITY
+	#echo $STARTT $ENDT $CITY
+	shift
+
+elif [ "$#" == 2 ] 
+then
+	DAT="$1"
+	CITY="$2"
+		
+	D=$( echo $DAT | cut -f 1 -d "-" ) 
+	M=$( echo $DAT | cut -f 2 -d "-" )
+	Y=$( echo $DAT | cut -f 3 -d "-" ) 
+	STARTT=$( date -d $M'/'$D'/'$Y +'%s' )
+	ENDT=$( echo $STARTT + 24*60*60 | bc )
+	#echo $STARTT $ENDT $CITY
+	URL=$( echo "https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString="$CITY"&startTime="$STARTT"&endTime="$ENDT )
+	curl -s $URL | grep $CITY 
+else echo	
+	"Nespravny pocet argumentov, musi byt jeden alebo dva!"
+fi
